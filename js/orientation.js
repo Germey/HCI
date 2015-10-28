@@ -24,5 +24,32 @@ function onPlusReady() {
 			}
 			$(document).scrollLeft(nowScrollLeft);
 		}
-	}); 
+		if (o.beta > 25 && o.beta < 90 || o.beta < -25 && o.beta > -90) {
+			nowScrollTop = $(document).scrollTop();
+			nowScrollTop += o.beta;
+			if (nowScrollTop > maxScroolTop) {
+				nowScrollTop = maxScroolTop;
+			}
+			if (nowScrollTop < 0) {
+				nowScrollTop = 0;
+			}
+			$(document).scrollTop(nowScrollTop);
+		}
+	});
+	
+	plus.accelerometer.watchAcceleration(function(a) {
+		xisResult = a.xAxis*a.xAxis + a.yAxis*a.yAxis + a.zAxis*a.zAxis;
+		if (xisResult > 150) {
+			volume = plus.device.getVolume();
+			volume *= xisResult / 100;
+			volume = volume > 1 ? 1 : volume;
+			plus.device.setVolume(volume);
+			mui.toast('当前音量'+ toDecimal(volume));
+		} else {
+			plus.device.setVolume(0.2);
+		}
+	}, function(e) {
+		alert("获取加速度信息失败" + e.message ); 
+	});
+	
 }
