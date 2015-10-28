@@ -4,6 +4,20 @@ var pic = $("#mainpic");
 var initialScale = 1;
 var currentScale = 1;
 
+/**
+ * 保留两位小数
+ * @param {float} x
+ */
+function toDecimal(x) {  
+    var f = parseFloat(x);  
+    if (isNaN(f)) {  
+        return;  
+    }  
+    f = Math.round(x*100)/100;  
+    return f;  
+}  
+
+
 
 $(function() {
 	init();
@@ -67,11 +81,16 @@ touch.on(pic, 'pinchend', function(ev){
  * 长按手势
  */
 
-touch.on(pic, 'hold', function() {
+function initScale() {
 	pic.width(initWidth);
 	pic.height(initHeight);
 	pic.position().left = initPosX;
 	pic.position().top = initPoxY;
+}
+
+
+touch.on(pic, 'hold', function() {
+	initScale();
 });
 
 /**
@@ -93,7 +112,6 @@ touch.on(pic, 'dragend', function(ev){
 	dy += ev.y;
 });
 */
-
 
 
 /**
@@ -132,6 +150,51 @@ function handleVoice(voiceResult) {
 	if (hasContent(voiceResult, "下")) {
 		$(document).scrollTop(nowTop + 100);
 	}
+	if (hasContent(voiceResult, "汴京郊野")) {
+		initScale();
+		$(document).scrollLeft(3300);
+	}
+	if (hasContent(voiceResult, "汴河码头")) {
+		initScale();
+		$(document).scrollLeft(2100);
+	}
+	if (hasContent(voiceResult, "市区街道")) {
+		initScale();
+		$(document).scrollLeft(1400);
+	}
+	if (hasContent(voiceResult, "流水")) {
+		initScale();
+		$(document).scrollLeft(2000);
+		startPlay("water");
+	}
+	if (hasContent(voiceResult, "讨价还价")) {
+		initScale();
+		$(document).scrollLeft(1300);
+		startPlay("people");
+	}
+	if (hasContent(voiceResult, "戏曲")) {
+		initScale();
+		$(document).scrollLeft(500);
+		startPlay("xiqu");
+	}
+	if (hasContent(voiceResult, "大")) {
+		volume = plus.device.getVolume();
+		volume += 0.2;
+		if (volume >= 1) {
+			volume = 1;
+		}
+		plus.device.setVolume(volume);
+		mui.toast('当前音量'+ toDecimal(volume));
+	}
+	if (hasContent(voiceResult, "小")) {
+		volume = plus.device.getVolume();
+		volume -= 0.2;
+		if (volume <= 0) {
+			volume = 0;
+		}
+		plus.device.setVolume(volume);
+		mui.toast('当前音量'+ toDecimal(volume));
+	}
 	//alert($(document).scrollLeft());
 	
 }
@@ -139,6 +202,9 @@ function handleVoice(voiceResult) {
 function startRecognize() {
 	var options = {};
 	options.engine = 'iFly';
+	if (p) {
+		stopPlay();
+	}
 	plus.speech.startRecognize(options, function(s) {
 		handleVoice(s);
 	}, function(e) {
@@ -154,6 +220,11 @@ voicePic.on("click", function() {
 	} else if ($(this).attr("src") == voiceOnImg) {
 		voiceOn = 0;
 		$(this).attr("src", voiceOffImg);
+		if (p) {
+			stopPlay();
+		}
 	}
 });
+
+
 
