@@ -35,11 +35,16 @@ setAllHidden();
 */
 
 var p = null; 
-function startPlay(name) {
+function startPlay(name, tail) {
 	if (plus.audio == undefined) {
 		alert("Device not ready!");
 	}
-	p = plus.audio.createPlayer("wav/" + name + ".wav");
+	if (!tail) {
+		p = plus.audio.createPlayer("wav/" + name + ".wav");
+	} else {
+		p = plus.audio.createPlayer("wav/" + name + "." + tail);
+	}
+	
 	p.play(function() {
 		
 	}, function(e) {

@@ -8,14 +8,14 @@ var currentScale = 1;
  * 保留两位小数
  * @param {float} x
  */
-function toDecimal(x) {  
-    var f = parseFloat(x);  
-    if (isNaN(f)) {  
-        return;  
-    }  
-    f = Math.round(x*100)/100;  
-    return f;  
-}  
+function toDecimal(x) {
+    var f = parseFloat(x);
+    if (isNaN(f)) {
+        return;
+    }
+    f = Math.round(x*100)/100;
+    return f;
+}
 
 
 
@@ -175,6 +175,15 @@ function handleVoice(voiceResult) {
 	if (hasContent(voiceResult, "戏曲")) {
 		initScale();
 		$(document).scrollLeft(500);
+		startPlay("xiqu");
+	}
+	if (hasContent(voiceResult, "二泉映月")) {
+		startPlay("erquan", "mp3");
+	}
+	if (hasContent(voiceResult, "狂想")) {
+		startPlay("keluo", "mp3");
+	}
+	if (hasContent(voiceResult, "戏曲")) {
 		startPlay("xiqu");
 	}
 	if (hasContent(voiceResult, "大")) {
